@@ -3,6 +3,7 @@ import torch
 
 
 layer_norm = torch.nn.LayerNorm(4)
+optim = torch.optim.SGD(layer_norm.parameters(), lr=0.01)
 
 
 x = torch.tensor(
@@ -21,3 +22,7 @@ out.backward(torch.tensor(
 print('Gradient:', np.array(np.nditer(x.grad, order='F')))
 print('d_gamma:', np.array(np.nditer(layer_norm.weight.grad, order='F')))
 print('d_beta:', np.array(np.nditer(layer_norm.bias.grad, order='F')))
+
+optim.step()
+out = layer_norm.forward(x)
+print('Output after one step (SGD):', np.array(np.nditer(out.detach().numpy(), order='F')))
