@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from transformers.models.llama.modeling_llama import LlamaAttention, LlamaConfig
+from transformers.models.qwen2.modeling_qwen2 import Qwen2Attention, Qwen2Config
 
 
 x = torch.tensor(
@@ -46,10 +46,13 @@ sin = torch.tensor(
     ]]
 )
 
-attention = LlamaAttention(LlamaConfig(num_attention_heads=4, num_key_value_heads=2, hidden_size=8), 0)
+attention = Qwen2Attention(Qwen2Config(num_attention_heads=4, num_key_value_heads=2, hidden_size=8), 0)
 attention.q_proj.weight.data = torch.zeros(8, 8) + 0.1
+attention.q_proj.bias.data = torch.zeros(8) + 0.11
 attention.k_proj.weight.data = torch.zeros(4, 8) + 0.2
+attention.k_proj.bias.data = torch.zeros(4) + 0.11
 attention.v_proj.weight.data = torch.zeros(4, 8) + 0.3
+attention.v_proj.bias.data = torch.zeros(4) + 0.11
 attention.o_proj.weight.data = torch.zeros(8, 8) + 0.2
 
 out_no_mask, _ = attention.forward(x, position_embeddings=(cos, sin), attention_mask=None)
